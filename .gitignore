@@ -1,0 +1,13 @@
+json_files/
+*.json
+*.npy
+*.index
+*.ids
+*.txt
+*.md
+*.docx
+*.doc
+*.pdf
+*.csv
+*.xlsx
+*.xls
