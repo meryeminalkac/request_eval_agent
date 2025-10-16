@@ -106,6 +106,7 @@ SUBMETRIC_PROMPTS[("resource_investment", "Estimated Person-Day Effort")] = Subm
 		"Evaluate Team Footprint (1–5) of the project above. Consider:\n"
 		"- Required roles and seniority\n"
 		"- Effort intensity across functions\n" 
+		"Here is current stuff: {current_stuff}\n"
 		'Return JSON only: {"score_1_to_5": float, "reason": str}'
 	),
 )

@@ -1,67 +1,86 @@
+# api/main.py
 from __future__ import annotations
 
-from typing import Dict
-
-import uvicorn
+from typing import Dict, Optional
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
+
+app = FastAPI(title="Form Processing API", version="0.2.0")
 
 
-app = FastAPI(title="Form Processing API", version="0.1.0")
+# ---- Models that match your Power Automate payload ----
 
+class Respondent(BaseModel):
+    email: Optional[str] = None
 
-class FormAnswer(BaseModel):
-    question: str
-    answer: str
-
-
-class FormAnswersRequest(BaseModel):
-    answers: list[FormAnswer]
+class FormSubmission(BaseModel):
+    form_id: Optional[str] = None
+    response_id: Optional[str] = None
+    submitted_at: Optional[str] = None  # keep as str to match PA exactly
+    respondent: Respondent = Field(default_factory=Respondent)
+    # PA sends a dict mapping question-title -> value
+    answers: Dict[str, Optional[str]] = Field(default_factory=dict)
 
 
 class FormAnswersResponse(BaseModel):
     question_answer_dict: Dict[str, str]
 
 
-@app.post("/form-answers", response_model=FormAnswersResponse)
-async def process_form_answers(request: FormAnswersRequest) -> FormAnswersResponse:
+# ---- Helpers ----
+
+def english_key(full_key: str) -> str:
     """
-    Process form answers and return a dictionary with questions as keys and answers as values.
-    Handles Turkish translations by removing everything after '-' in question keys.
-    
-    Expected input format:
+    Return the English part before ' - ' or ' – '.
+    E.g., 'Project-Proje' or 'Project - Proje' or 'Project – Proje' -> 'Project'
+    """
+    if " - " in full_key:
+        return full_key.split(" - ", 1)[0].strip()
+    if " – " in full_key:  # en dash
+        return full_key.split(" – ", 1)[0].strip()
+    # also handle no spaces around dash (rare)
+    for sep in ("–", "-"):
+        if sep in full_key:
+            return full_key.split(sep, 1)[0].strip()
+    return full_key.strip()
+
+
+# ---- Routes ----
+
+@app.get("/")
+def root():
+    return {"ok": True, "msg": "Form Processing API up"}
+
+@app.post("/form-answers", response_model=FormAnswersResponse)
+async def process_form_answers(payload: FormSubmission) -> FormAnswersResponse:
+    """
+    Accepts Power Automate payload:
     {
-        "answers": [
-            {"question": "Project - Proje", "answer": "OptiMix"},
-            {"question": "Company - Şirket", "answer": "EYAP"}
-        ]
+      "form_id": "...",
+      "response_id": "...",
+      "submitted_at": "2025-10-15T06:52:22.7895400Z",
+      "respondent": {"email": "..."},
+      "answers": {
+        "Project-Proje": "...",
+        "Company-Kuruluş": "...",
+        ...
+      }
     }
-    
+
     Returns:
     {
-        "question_answer_dict": {
-            "Project": "OptiMix",
-            "Company": "EYAP"
-        }
+      "question_answer_dict": {
+        "Project": "...",
+        "Company": "...",
+        ...
+      }
     }
     """
     try:
-        # Convert list of FormAnswer objects to dictionary
-        # Remove Turkish translations (everything after '-') from question keys
-        question_answer_dict = {}
-        for answer in request.answers:
-            # Split by '-' and take only the first part (English)
-            english_question = answer.question.split(' - ')[0].strip()
-            question_answer_dict[english_question] = answer.answer
-        
-        return FormAnswersResponse(question_answer_dict=question_answer_dict)
-    
+        qa: Dict[str, str] = {}
+        for k, v in (payload.answers or {}).items():
+            key = english_key(str(k))
+            qa[key] = "" if v is None else str(v)
+        return FormAnswersResponse(question_answer_dict=qa)
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error processing form answers: {str(e)}")
-
-
-if __name__ == "__main__":
-	uvicorn.run(app, host="0.0.0.0", port=8080, reload=False)
-
-
-
+        raise HTTPException(status_code=400, detail=f"Error processing form answers: {e}")

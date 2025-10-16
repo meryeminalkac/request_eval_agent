@@ -3,11 +3,10 @@ json_files/
 *.npy
 *.index
 *.ids
-*.txt
-*.md
 *.docx
 *.doc
 *.pdf
 *.csv
 *.xlsx
 *.xls
+
