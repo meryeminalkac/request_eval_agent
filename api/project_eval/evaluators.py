@@ -64,12 +64,24 @@ class Evaluator:
 		prf_by = self._index_by_project_name(prf_answers)
 		staff = staff_info if isinstance(staff_info, dict) else {"raw": staff_info}
 
-		eva = (eva_by.get(project_name) or {}).get("metrics", {})
+		# Use past project data as examples (not matching by project name)
+		# Get the first available project as an example
+		if eva_by:
+			example_project = list(eva_by.keys())[0]
+			eva = eva_by[example_project].get("metrics", {})
+		else:
+			eva = {}
+
 		metric_entry = eva.get(submetric_label) or {}
 		past_metric_evaluation = metric_entry.get("evaluation", "")
 		past_metric_score = metric_entry.get("score", "")
 
-		prf = prf_by.get(project_name) or {}
+		# Use past project data as examples (not matching by project name)
+		if prf_by:
+			example_project = list(prf_by.keys())[0]
+			prf = prf_by[example_project]
+		else:
+			prf = {}
 		past_project_company = prf.get("company") or prf.get("business_unit") or ""
 		past_project_scope_and_objectives = (
 			prf.get("Project Scope & Objectives") or prf.get("scope") or prf.get("objectives") or ""
@@ -84,8 +96,11 @@ class Evaluator:
 		past_project_stakeholders = prf.get("Project Stakeholders & Sponsorship") or prf.get("team") or ""
 		current_stuff = staff.get("current_stuff") or staff.get("staff") or staff
 
+		# Get the example project name for display
+		example_project_name = list(eva_by.keys())[0] if eva_by else "Example Project"
+		
 		return {
-			"past_project_name": project_name,
+			"past_project_name": example_project_name,  # Use example project name, not current project
 			"past_project_company": past_project_company,
 			"past_project_scope_and_objectives": past_project_scope_and_objectives,
 			"past_project_business_value_contribution": past_project_business_value_contribution,
