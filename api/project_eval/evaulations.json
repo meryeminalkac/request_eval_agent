@@ -1,0 +1,45 @@
+{
+  "project_name": "PlanOptX",
+  "metrics": {
+    "Business Value Contribution": {
+      "score": 5,
+      "evaluation": "Projenin değer önerisi açık ve ölçülebilir. Geçmiş müşteri talep verileri üzerinden negatif kârlı kombinasyonların tespit edilmesi ve toplam zararın büyüklüğü somut olarak belirtilmiş. Optimizasyon modeli ile kârlılığı artırıcı doğrudan bir etki hedefleniyor. Manuel süreçlerin otomatik ve veri odaklı hale getirilmesi, kısa sürede yüksek değer yaratma potansiyelini ortaya koyuyor."
+    },
+    "Strategic Fit": {
+      "score": 5,
+      "evaluation": "Proje, Delta Üretim Sistemleri’nin talep planlama ve üretim verimliliği stratejileri ile doğrudan uyumlu. Kârlılık ve kapasite optimizasyonu, şirketin operasyonel hedefleri ile örtüşüyor. Mevcut manuel süreçlerin iyileştirilmesi ve izlenebilirlik sağlanması, stratejik önceliklerle tam uyumlu."
+    },
+    "Scalability & Replicability Potential": {
+      "score": 3,
+      "evaluation": "Projedeki optimizasyon modeli, Nova Seramik gibi kuruluşlara uyarlanabilir. Ancak mevcut model, yalnızca Delta Üretim Sistemleri’nin üretim yapısına özel olarak tasarlanacaktır. Diğer kuruluşlarda doğrudan kullanılamaz; veri yapısı ve operasyonel kısıtlar farklılık göstereceği için modelin revize edilmesi ve uyarlanması gerekir. Bu nedenle ölçeklenebilirlik ve yaygınlaştırılabilirlik potansiyeli orta seviyede değerlendirilmiştir."
+    },
+    "Projected Timeline": {
+      "score": 3,
+      "evaluation": "17 hafta 39 a/g"
+    },
+    "Estimated Person-Day Effort": {
+      "score": 3,
+      "evaluation": "17 hafta 39 a/g"
+    },
+    "External Resource Dependency": {
+      "score": 1,
+      "evaluation": "Proje için dış kaynak bağımlılığı bulunmamaktadır. Optimizasyon modelleme ve çözümleme yetkinliği ekipte mevcut olup geliştirme sürecinin tamamı iç kaynaklarla yürütülebilecektir."
+    },
+    "Scope Definition Risk": {
+      "score": 3,
+      "evaluation": "Modelin nasıl çalıştırılacağı ve çıktıların hangi formatta sunulacağı henüz net değildir. Açık kaynak çözücülerin performansının yeterli olup olmayacağı ve ticari çözücü gereksinimi ihtimali proje ilerledikçe netleşecektir. Bu belirsizlikler, proje kapsamının kesin tanımında orta seviyede risk oluşturmaktadır."
+    },
+    "Critical Talent Dependency": {
+      "score": 1,
+      "evaluation": "Projede geliştirici ve karar verici rolleri net biçimde tanımlanmıştır; süreç sahipliği de aynı kişilerde toplanmıştır. Karar verici rolünün tek bir kişide toplanması, karar alma süreçlerini hızlandırarak projenin ilerleyişini kolaylaştırmaktadır. Bu nedenle kritik yetkinlik bağımlılığı düşük seviyede (1/5) olarak değerlendirilmiştir."
+    },
+    "Solution Complexity & Innovation Risk": {
+      "score": 3,
+      "evaluation": "Ekip, optimizasyon çalışmaları konusunda deneyime sahiptir; ancak talep planlama alanına özgü optimizasyon uygulamaları konusunda doğrudan deneyim bulunmamaktadır. Modelin nonlineer yapısının lineerleştirilmesi gerekliliği, çözüm sürecini teknik olarak daha karmaşık hale getirmektedir."
+    },
+    "Implementation Failure Risk": {
+      "score": 3,
+      "evaluation": "Modelin kapsamının genişlemesiyle birlikte açık kaynak çözücülerin yetersiz kalma riski mevcuttur; ticari çözücü ihtiyacı doğabilir. Gerekli lisansların temin edilememesi veya Delta Veri Analitiği ekibiyle canlıya alma aşamasında entegrasyon süreçlerinde yaşanabilecek uyumsuzluklar, projenin uygulama başarısını etkileyebilir. Bu nedenle proje başarı riski orta seviyede değerlendirilmiştir."
+    }
+  }
+}

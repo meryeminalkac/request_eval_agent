@@ -1,5 +1,4 @@
-json_files/
-*.json
+
 *.npy
 *.index
 *.ids
@@ -9,4 +8,7 @@ json_files/
 *.csv
 *.xlsx
 *.xls
+*.pyc
+api/project_eval/config.json
+
 

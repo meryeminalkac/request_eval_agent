@@ -1,0 +1,55 @@
+{
+  "staff": [
+    {
+      "name": "Zeynep Kaya",
+      "role": "Üretken Yapay Zeka Stajyeri",
+      "education": {
+        "degree": "Lisans",
+        "major": "Yönetim Bilişim Sistemleri",
+        "level": "Son Sınıf Öğrencisi"
+      },
+      "experience": [
+        "Kurumsal bilgi erişimi için bir sohbet botu geliştirdi",
+        "Halihazırda üretken yapay zeka alanında, özellikle otonom ajan sistemleri üzerinde çalışmaktadır"
+      ],
+      "skills": [
+        "Ajanik Yapay Zeka",
+        "Veri Geri Getirme ile Zenginleştirilmiş Üretim (RAG)",
+        "XGBoost",
+        "Veri Analizi",
+        "İstem (Prompt) Mühendisliği"
+      ],
+      "interests": [
+        "Kurumsal sistemlerde yapay zekâ uygulamaları",
+        "Otonom çoklu ajan iş akışları",
+        "Model değerlendirme ve yorumlanabilirlik"
+      ],
+      "overall_profile": "Zeynep, zeki sohbet botları geliştirme deneyimine sahip bir son sınıf Yönetim Bilişim Sistemleri öğrencisidir. Güçlü veri analizi becerilerini üretken yapay zeka ve ajanik mimarilerdeki pratik deneyimiyle birleştirmektedir."
+    },
+    {
+      "name": "Ece Demirtaş",
+      "role": "Veri Bilimci",
+      "education": {
+        "degree": "Lisans",
+        "major": "İstatistik"
+      },
+      "experience": [
+        "2 yıllık profesyonel veri bilimi deneyimine sahiptir",
+        "Tahmine dayalı modelleme ve uygulamalı analitik projelerinde çalışmıştır"
+      ],
+      "skills": [
+        "Ajanik Yapay Zeka",
+        "İstatistiksel Modelleme",
+        "Makine Öğrenmesi",
+        "Veri Görselleştirme",
+        "Keşifsel Veri Analizi"
+      ],
+      "interests": [
+        "Ajanik yapay zeka uygulamaları",
+        "Gelişmiş analitik",
+        "Deneysel tasarım ve nedensellik analizi"
+      ],
+      "overall_profile": "Ece, iki yıllık veri bilimi deneyimine sahip bir istatistik mezunudur. Uygulamalı analitik, modelleme ve ajanik yapay zekâ konularında yoğunlaşmaktadır."
+    }
+  ]
+}
