@@ -77,7 +77,7 @@ class Generator:
 			response = await self.client.chat.completions.create(
 				model=self._config["deployment_name"],
 				messages=[
-					{"role": "system", "content": "You are an expert project evaluator. Always respond with valid JSON only."},
+					{"role": "system", "content": "You are an expert project evaluator. You must respond with ONLY valid JSON in this exact format: {\"score_1_to_5\": number, \"reason\": \"text\"}. Do not include any markdown formatting, code blocks, or additional text."},
 					{"role": "user", "content": prompt}
 				],
 				temperature=0.1,
@@ -88,7 +88,17 @@ class Generator:
 			
 			# Try to parse JSON response
 			try:
-				result = json.loads(content)
+				# Clean the content - remove markdown code blocks if present
+				cleaned_content = content.strip()
+				if cleaned_content.startswith("```json"):
+					cleaned_content = cleaned_content[7:]  # Remove ```json
+				if cleaned_content.startswith("```"):
+					cleaned_content = cleaned_content[3:]   # Remove ```
+				if cleaned_content.endswith("```"):
+					cleaned_content = cleaned_content[:-3]  # Remove trailing ```
+				cleaned_content = cleaned_content.strip()
+				
+				result = json.loads(cleaned_content)
 				if "score_1_to_5" not in result or "reason" not in result:
 					raise ValueError("Missing required fields in response")
 				return result
