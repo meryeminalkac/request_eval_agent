@@ -10,6 +10,7 @@
 *.xls
 *.pyc
 api/project_eval/config.json
+api\project_eval\config.json
 tests 
 
 

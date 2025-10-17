@@ -147,7 +147,7 @@ class Evaluator:
 					key=key,
 					name=key.replace("_", " ").title(),
 					description="Auto placeholder",
-					template="Project:\n{project_text}\n\nReturn JSON only: {\"score_1_to_5\": 3.0, \"reason\": \"placeholder\"}",
+					template="Project:\n{project_text}\n\nReturn JSON only: {{\"score_1_to_5\": 3.0, \"reason\": \"placeholder\"}}",
 				)
 			prompts.append((key, pmpt))
 

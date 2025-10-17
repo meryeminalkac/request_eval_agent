@@ -77,7 +77,7 @@ class Generator:
 			response = await self.client.chat.completions.create(
 				model=self._config["deployment_name"],
 				messages=[
-					{"role": "system", "content": "You are an expert project evaluator. You must respond with ONLY valid JSON in this exact format: {\"score_1_to_5\": number, \"reason\": \"text\"}. Do not include any markdown formatting, code blocks, or additional text."},
+					{"role": "system", "content": "You are an expert project evaluator. You must respond with ONLY valid JSON in this exact format: {\"score_1_to_5\": number, \"reason\": \"text\"}. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }."},
 					{"role": "user", "content": prompt}
 				],
 				temperature=0.1,
@@ -90,13 +90,29 @@ class Generator:
 			try:
 				# Clean the content - remove markdown code blocks if present
 				cleaned_content = content.strip()
+				
+				# Remove markdown code blocks
 				if cleaned_content.startswith("```json"):
 					cleaned_content = cleaned_content[7:]  # Remove ```json
-				if cleaned_content.startswith("```"):
+				elif cleaned_content.startswith("```"):
 					cleaned_content = cleaned_content[3:]   # Remove ```
+				
 				if cleaned_content.endswith("```"):
 					cleaned_content = cleaned_content[:-3]  # Remove trailing ```
+				
 				cleaned_content = cleaned_content.strip()
+				
+				# Try to find JSON object in the content if it's not at the start
+				if not cleaned_content.startswith("{"):
+					# Look for JSON object in the content
+					start_idx = cleaned_content.find("{")
+					if start_idx != -1:
+						cleaned_content = cleaned_content[start_idx:]
+				
+				# Remove any trailing text after the JSON object
+				if "}" in cleaned_content:
+					end_idx = cleaned_content.rfind("}") + 1
+					cleaned_content = cleaned_content[:end_idx]
 				
 				result = json.loads(cleaned_content)
 				if "score_1_to_5" not in result or "reason" not in result:
@@ -104,6 +120,9 @@ class Generator:
 				return result
 			except (json.JSONDecodeError, ValueError) as e:
 				# Fallback if JSON parsing fails
+				print(f"JSON parsing failed: {str(e)}")
+				print(f"Original content: {content[:200]}...")
+				print(f"Cleaned content: {cleaned_content[:200]}...")
 				return {
 					"score_1_to_5": 3.0,
 					"reason": f"Failed to parse response: {str(e)}. Raw response: {content[:100]}..."

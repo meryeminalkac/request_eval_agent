@@ -48,7 +48,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Strategic Fit")] = SubmetricPrompt(
 		"Scope & Objectives: {past_project_scope_and_objectives}\n"
 		"**Past Evaluation (Strategic Fit):** {past_metric_evaluation}\n"
 		"Score: {past_metric_score}\n"
-		'Return JSON only: {"score_1_to_5": float, "reason": str}'
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 
@@ -63,7 +63,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Business Value Contribution")] = Submetri
 		"- Stakeholder impact and outcomes\n"
 		"**Past Project Example:**\nProject: {past_project_name}\nBusiness Value Contribution: {past_project_business_value_contribution}\n"
 		"**Past Evaluation (Business Value Contribution):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		'Return JSON only: {"score_1_to_5": float, "reason": str}'
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 SUBMETRIC_PROMPTS[("business_impact", "Scalability & Replicability Potential")] = SubmetricPrompt(
