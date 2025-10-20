@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 from pathlib import Path
+import os
 from typing import Protocol, Any
 
 try:
@@ -33,26 +34,41 @@ class Generator:
 
 	def load_api_key(self) -> dict[str, Any]:
 		"""
-		Load API configuration from JSON file.
-		Expected format:
-		{
-			"azure_endpoint": "https://your-resource.openai.azure.com/",
-			"api_key": "your-api-key",
-			"api_version": "2024-02-15-preview",
-			"deployment_name": "your-deployment-name"
-		}
+		Load API configuration, preferring environment variables. Falls back to JSON file.
+		
+		Environment variables:
+		- OPENAI_API_TYPE=azure
+		- OPENAI_API_KEY
+		- OPENAI_API_BASE
+		- OPENAI_API_VERSION
+		- OPENAI_DEPLOYMENT
+		
 		"""
+		# 1) Prefer environment variables
+		api_key = os.environ.get("OPENAI_API_KEY")
+		api_type = os.environ.get("OPENAI_API_TYPE", "azure").lower()
+		if api_key and api_type == "azure":
+			api_base = os.environ.get("OPENAI_API_BASE")
+			api_version = os.environ.get("OPENAI_API_VERSION")
+			deployment = os.environ.get("OPENAI_DEPLOYMENT")
+			if api_base and api_version and deployment:
+				self._config = {
+					"azure_endpoint": api_base,
+					"api_key": api_key,
+					"api_version": api_version,
+					"deployment_name": deployment,
+				}
+				return self._config
+
+		# 2) Fallback to config.json
 		if not self.config_path.exists():
 			raise FileNotFoundError(f"Config file not found: {self.config_path}")
-		
 		with self.config_path.open("r", encoding="utf-8") as f:
 			self._config = json.load(f)
-		
 		required_keys = ["azure_endpoint", "api_key", "api_version", "deployment_name"]
 		missing_keys = [key for key in required_keys if key not in self._config]
 		if missing_keys:
 			raise ValueError(f"Missing required config keys: {missing_keys}")
-		
 		return self._config
 
 	async def complete(self, prompt: str) -> dict[str, Any]:
