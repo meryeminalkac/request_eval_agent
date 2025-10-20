@@ -4,6 +4,7 @@ import asyncio
 from typing import Any, Dict, List, Tuple
 import json
 import os
+import logging
 
 from .llm import LLMClient
 from .prompts import SUBMETRIC_PROMPTS, SubmetricPrompt
@@ -169,6 +170,17 @@ class Evaluator:
 				staff_info or {},
 			)
 		rendered = prompt.render(project_text, **kwargs)
+		# Optional prompt logging
+		if os.environ.get("LOG_PROMPTS", "").lower() in {"1", "true", "yes"}:
+			try:
+				logging.getLogger("uvicorn.access").info(
+					"[LLM PROMPT] metric=%s sub=%s prompt=%s",
+					self.metric_id,
+					prompt.name,
+					rendered[:1000],
+				)
+			except Exception:
+				pass
 		try:
 			raw = await self.llm.complete(rendered)
 			resp = self._normalize_llm_response(raw)
