@@ -177,7 +177,7 @@ class Evaluator:
 					"[LLM PROMPT] metric=%s sub=%s prompt=%s",
 					self.metric_id,
 					prompt.name,
-					rendered[:1000],
+					rendered,
 				)
 			except Exception:
 				pass
