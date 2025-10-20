@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Dict, List, Tuple
 import json
+import os
 
 from .llm import LLMClient
 from .prompts import SUBMETRIC_PROMPTS, SubmetricPrompt
@@ -46,11 +47,20 @@ class Evaluator:
 		- If keys come quoted (e.g., '"score_1_to_5"'), strip quotes/spaces.
 		- Default score to 3.0 and provide a fallback reason when missing/invalid.
 		"""
+		# If bytes → decode first
+		if isinstance(resp, (bytes, bytearray)):
+			try:
+				resp = resp.decode("utf-8", errors="ignore")
+			except Exception:
+				pass
 		if isinstance(resp, str):
 			try:
 				resp = json.loads(resp)
 			except Exception:
 				return {"score_1_to_5": 3.0, "reason": "Unparseable LLM output; defaulted."}
+		# Some providers return a list with a single dict
+		if isinstance(resp, list) and resp and isinstance(resp[0], dict):
+			resp = resp[0]
 		if not isinstance(resp, dict):
 			return {"score_1_to_5": 3.0, "reason": "Non-dict LLM output; defaulted."}
 		cleaned = {str(k).strip(" '\""): v for k, v in resp.items()}
@@ -168,6 +178,13 @@ class Evaluator:
 		reason = resp.get("reason")
 		if not isinstance(reason, str) or not reason.strip():
 			reason = "No reason; defaulted."
+
+		# Optional debugging
+		if os.environ.get("LOG_LLM", "").lower() in {"1", "true", "yes"}:
+			try:
+				print(f"[LLM DEBUG] metric={self.metric_id} sub={prompt.name} score={score} reason={reason[:120]}")
+			except Exception:
+				pass
 		return {
 			"key": prompt.key,
 			"name": prompt.name,
