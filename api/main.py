@@ -49,6 +49,18 @@ def build_project_text(normalized: Dict[str, str]) -> str:
         parts.append(f"{label}: {v}")
     return "\n".join(parts)
 
+import traceback
+
+# add this helper in main.py
+async def _safe_eval(name, awaitable):
+    try:
+        return await awaitable
+    except Exception as e:
+        print(f"[{name}] FAILED: {e}")
+        print(traceback.format_exc())
+        raise RuntimeError(f"{name} parse error: {e}") 
+
+
 async def run_evaluations(normalized: Dict[str, str]):
 
     try:
@@ -70,27 +82,29 @@ async def run_evaluations(normalized: Dict[str, str]):
     effort = EffortEvaluator(llm)
     risk   = RiskEvaluator(llm)
 
-    impact_res = await impact.evaluate_with_sources(
-        project_name=project_name,
-        project_text=project_text,
-        evaulations=evaulations_cfg,
-        prf_answers=prf_answers,
-        staff_info=staff_info,
-    )
-    effort_res = await effort.evaluate_with_sources(
-        project_name=project_name,
-        project_text=project_text,
-        evaulations=evaulations_cfg,
-        prf_answers=prf_answers,
-        staff_info=staff_info,
-    )
-    risk_res = await risk.evaluate_with_sources(
-        project_name=project_name,
-        project_text=project_text,
-        evaulations=evaulations_cfg,
-        prf_answers=prf_answers,
-        staff_info=staff_info,
-    )
+    impact_res = await _safe_eval("impact", impact.evaluate_with_sources(
+    project_name=project_name,
+    project_text=project_text,
+    evaulations=evaulations_cfg,
+    prf_answers=prf_answers,
+    staff_info=staff_info,
+))
+
+    effort_res = await _safe_eval("effort", effort.evaluate_with_sources(
+    project_name=project_name,
+    project_text=project_text,
+    evaulations=evaulations_cfg,
+    prf_answers=prf_answers,
+    staff_info=staff_info,
+))
+
+    risk_res = await _safe_eval("risk", risk.evaluate_with_sources(
+    project_name=project_name,
+    project_text=project_text,
+    evaulations=evaulations_cfg,
+    prf_answers=prf_answers,
+    staff_info=staff_info,
+))
 
     return {"impact": impact_res, "effort": effort_res, "risk": risk_res}
 

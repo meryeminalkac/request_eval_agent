@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from typing import Any, Dict, List, Tuple
+import json
 
 from .llm import LLMClient
 from .prompts import SUBMETRIC_PROMPTS, SubmetricPrompt
@@ -37,6 +38,32 @@ class Evaluator:
 		self.metric_id = metric_id
 		self.submetric_keys = submetric_keys
 		self.llm = llm
+
+	def _normalize_llm_response(self, resp: Any) -> dict:
+		"""Normalize possibly malformed LLM outputs into a dict with expected keys.
+
+		- If resp is a JSON string, parse it.
+		- If keys come quoted (e.g., '"score_1_to_5"'), strip quotes/spaces.
+		- Default score to 3.0 and provide a fallback reason when missing/invalid.
+		"""
+		if isinstance(resp, str):
+			try:
+				resp = json.loads(resp)
+			except Exception:
+				return {"score_1_to_5": 3.0, "reason": "Unparseable LLM output; defaulted."}
+		if not isinstance(resp, dict):
+			return {"score_1_to_5": 3.0, "reason": "Non-dict LLM output; defaulted."}
+		cleaned = {str(k).strip(" '\""): v for k, v in resp.items()}
+		try:
+			score = float(cleaned.get("score_1_to_5", 3.0))
+			if not (1.0 <= score <= 5.0):
+				raise ValueError
+		except Exception:
+			score = 3.0
+		reason = cleaned.get("reason")
+		if not isinstance(reason, str) or not reason.strip():
+			reason = "No reason; defaulted."
+		return {"score_1_to_5": float(f"{score:.2f}"), "reason": reason.strip()}
 
 	def _index_by_project_name(self, obj: Any) -> Dict[str, dict]:
 		"""Accept dict (single project), list of dicts, or dict keyed by name."""
@@ -133,14 +160,10 @@ class Evaluator:
 			)
 		rendered = prompt.render(project_text, **kwargs)
 		try:
-			resp = await self.llm.complete(rendered)
+			raw = await self.llm.complete(rendered)
+			resp = self._normalize_llm_response(raw)
 		except Exception:
-			return {
-				"key": prompt.key,
-				"name": prompt.name,
-				"score": 3.0,
-				"reason": "LLM error; defaulted to 3.0.",
-			}
+			resp = {"score_1_to_5": 3.0, "reason": "LLM error; defaulted to 3.0."}
 		score = _coerce_score(resp.get("score_1_to_5"))
 		reason = resp.get("reason")
 		if not isinstance(reason, str) or not reason.strip():

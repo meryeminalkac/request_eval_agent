@@ -9,8 +9,9 @@
 *.xlsx
 *.xls
 *.pyc
+*.txt
 api/project_eval/config.json
 api\project_eval\config.json
 tests 
-
+sample_request_results.json
 
