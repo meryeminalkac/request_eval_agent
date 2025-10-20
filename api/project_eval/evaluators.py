@@ -172,8 +172,8 @@ class Evaluator:
 		try:
 			raw = await self.llm.complete(rendered)
 			resp = self._normalize_llm_response(raw)
-		except Exception:
-			resp = {"score_1_to_5": 3.0, "reason": "LLM error; defaulted to 3.0."}
+		except Exception as e:
+			resp = {"score_1_to_5": 3.0, "reason": f"LLM error: {e}; defaulted to 3.0."}
 		score = _coerce_score(resp.get("score_1_to_5"))
 		reason = resp.get("reason")
 		if not isinstance(reason, str) or not reason.strip():
