@@ -76,7 +76,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Scalability & Replicability Potential")] 
         "**Past Project Example:**\nProject: {past_project_name}\nScalability & Replicability Potential: {past_project_scalability_data_scope}\n"
         "**Past Evaluation (Scalability & Replicability Potential):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
 		"- Operational readiness for scale\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 
@@ -92,8 +92,8 @@ SUBMETRIC_PROMPTS[("resource_investment", "Projected Timeline")] = SubmetricProm
         "- Milestones / critical path clarity\n"
 		"- External dependencies and sequencing\n"
         "**Past Project Example:**\nProject: {past_project_name}\nProjected Timeline: {past_project_data_scope}\n"
-        "**Past Evaluation (Projected Timeline):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (Projected Timeline):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 #This part is a bit complicated we need past project assignment and duration data 
@@ -107,7 +107,7 @@ SUBMETRIC_PROMPTS[("resource_investment", "Estimated Person-Day Effort")] = Subm
 		"- Required roles and seniority\n"
 		"- Effort intensity across functions\n" 
 		"Here is current stuff: {current_stuff}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 SUBMETRIC_PROMPTS[("execution_risk", "External Resource Dependency")] = SubmetricPrompt(
@@ -120,8 +120,8 @@ SUBMETRIC_PROMPTS[("execution_risk", "External Resource Dependency")] = Submetri
 		"- Vendor reliance and constraints\n"
 		"- External blockers and risks\n"
         "**Past Project Example:**\nProject: {past_project_name}\nData Scope: {past_project_data_scope}\nStakeholders: {past_project_stakeholders}\n"
-        "**Past Evaluation (External Resource Dependency):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (External Resource Dependency):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 
@@ -136,8 +136,8 @@ SUBMETRIC_PROMPTS[("execution_risk", "Scope Definition Risk")] = SubmetricPrompt
 		"- Clear scope and success criteria\n"
 		"- Crisp problem statement\n"
         "**Past Project Example:**\nProject: {past_project_name}\nData Scope: {past_project_data_scope}\nScope & Objectives: {past_project_scope_and_objectives}\n"
-        "**Past Evaluation (Scope Definition):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (Scope Definition):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 SUBMETRIC_PROMPTS[("execution_risk", "Critical Talent Dependency")] = SubmetricPrompt(
@@ -151,8 +151,8 @@ SUBMETRIC_PROMPTS[("execution_risk", "Critical Talent Dependency")] = SubmetricP
 		"- Ownership clarity\n"
         "Current Stuff:{current_stuff}\n"
         "**Past Project Example:**\nProject: {past_project_name}\nScope & Objectives: {past_project_scope_and_objectives}\n"
-        "**Past Evaluation (Critical Talent):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (Critical Talent):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 SUBMETRIC_PROMPTS[("execution_risk", "Solution Complexity & Innovation Risk")] = SubmetricPrompt(
@@ -165,8 +165,8 @@ SUBMETRIC_PROMPTS[("execution_risk", "Solution Complexity & Innovation Risk")] =
 		"- Technical unknowns/R&D needs\n"
 		"- Feasibility uncertainty\n"
         "**Past Project Example:**\nProject: {past_project_name}\nScope & Objectives: {past_project_scope_and_objectives}\n"
-        "**Past Evaluation (Innovation Complexity):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (Innovation Complexity):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 SUBMETRIC_PROMPTS[("execution_risk", "Implementation Failure Risk")] = SubmetricPrompt(
@@ -179,8 +179,8 @@ SUBMETRIC_PROMPTS[("execution_risk", "Implementation Failure Risk")] = Submetric
 		"- Execution gaps and change risks\n"
 		"- Adoption and rollout barriers\n"
         "**Past Project Example:**\nProject: {past_project_name}\nScope & Objectives: {past_project_scope_and_objectives}\n"
-        "**Past Evaluation (Implementation Failure):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
-		f'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
+		"**Past Evaluation (Implementation Failure):** {past_metric_evaluation}\nScore: {past_metric_score}\n"
+		'Return JSON only: {{"score_1_to_5": float, "reason": str}}'
 	),
 )
 
