@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 import json
 
 
-from project_eval.llm import Generator, StubLLMClient
+from project_eval.llm import Generator
 from project_eval.evaluators import ImpactEvaluator, EffortEvaluator, RiskEvaluator
 
 app = FastAPI(title="Form Processing API (Minimal Sync)", version="0.5.0")
