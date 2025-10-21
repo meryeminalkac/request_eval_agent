@@ -51,7 +51,7 @@ def build_project_text(normalized: Dict[str, str]) -> str:
 
 import traceback
 
-# add this helper in main.py
+
 async def _safe_eval(name, awaitable):
     try:
         return await awaitable
@@ -66,7 +66,7 @@ async def run_evaluations(normalized: Dict[str, str]):
     try:
         llm = Generator()
     except Exception:
-        llm = StubLLMClient()
+        raise HTTPException(status_code=500, detail="LLM client initialization failed")
 
     project_name = normalized.get("Project", "Unknown Project")
     project_text = build_project_text(normalized)

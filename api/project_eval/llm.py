@@ -44,7 +44,7 @@ class Generator:
 		- OPENAI_DEPLOYMENT
 		
 		"""
-		# 1) Prefer environment variables
+		# Prefer environment variables
 		api_key = os.environ.get("OPENAI_API_KEY")
 		api_type = os.environ.get("OPENAI_API_TYPE", "azure").lower()
 		if api_key and api_type == "azure":
@@ -60,7 +60,7 @@ class Generator:
 				}
 				return self._config
 
-		# 2) Fallback to config.json
+		# Fallback to config.json
 		if not self.config_path.exists():
 			raise FileNotFoundError(f"Config file not found: {self.config_path}")
 		with self.config_path.open("r", encoding="utf-8") as f:
@@ -74,7 +74,7 @@ class Generator:
 	async def complete(self, prompt: str) -> dict[str, Any]:
 		"""
 		Call Azure OpenAI API with the given prompt.
-		Returns parsed JSON response with score_1_to_5 and reason.
+		Returns parsed JSON response with score (1-5) and reason.
 		"""
 		if AsyncAzureOpenAI is None:
 			raise ImportError("openai package not installed. Install with: pip install openai")
@@ -93,7 +93,7 @@ class Generator:
 			response = await self.client.chat.completions.create(
 				model=self._config["deployment_name"],
 				messages=[
-					{"role": "system", "content": "You are an expert project evaluator. You must respond with ONLY valid JSON in this exact format: {\"score_1_to_5\": number, \"reason\": \"text\"}. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }."},
+					{"role": "system", "content": "Sen uzman bir proje değerlendiricisisin. Yalnızca bu tam formatta geçerli JSON ile yanıt vermelisin: {\"score_1_to_5\": number, \"reason\": \"text\"}. Markdown formatlaması, kod blokları veya ek metin ekleme. Yanıtını { ile başlat ve } ile bitir."},
 					{"role": "user", "content": prompt}
 				],
 				temperature=0.1,
@@ -102,30 +102,28 @@ class Generator:
 			
 			content = response.choices[0].message.content.strip()
 			
-			# Try to parse JSON response
+		
 			try:
-				# Clean the content - remove markdown code blocks if present
+			
 				cleaned_content = content.strip()
 				
 				# Remove markdown code blocks
 				if cleaned_content.startswith("```json"):
-					cleaned_content = cleaned_content[7:]  # Remove ```json
+					cleaned_content = cleaned_content[7:]  
 				elif cleaned_content.startswith("```"):
-					cleaned_content = cleaned_content[3:]   # Remove ```
+					cleaned_content = cleaned_content[3:]   
 				
 				if cleaned_content.endswith("```"):
-					cleaned_content = cleaned_content[:-3]  # Remove trailing ```
+					cleaned_content = cleaned_content[:-3]  #
 				
 				cleaned_content = cleaned_content.strip()
 				
-				# Try to find JSON object in the content if it's not at the start
 				if not cleaned_content.startswith("{"):
-					# Look for JSON object in the content
+				
 					start_idx = cleaned_content.find("{")
 					if start_idx != -1:
 						cleaned_content = cleaned_content[start_idx:]
 				
-				# Remove any trailing text after the JSON object
 				if "}" in cleaned_content:
 					end_idx = cleaned_content.rfind("}") + 1
 					cleaned_content = cleaned_content[:end_idx]
@@ -135,7 +133,6 @@ class Generator:
 					raise ValueError("Missing required fields in response")
 				return result
 			except (json.JSONDecodeError, ValueError) as e:
-				# Fallback if JSON parsing fails
 				print(f"JSON parsing failed: {str(e)}")
 				print(f"Original content: {content[:200]}...")
 				print(f"Cleaned content: {cleaned_content[:200]}...")
@@ -151,18 +148,6 @@ class Generator:
 			}
 
 
-class StubLLMClient:
-	"""
-	Deterministic stub. No external deps. Produces mid-ish scores with a tiny, stable tweak.
-	"""
 
-	async def complete(self, prompt: str) -> dict[str, Any]:
-		await asyncio.sleep(0.01)
-		tweak = (sum(ord(c) for c in prompt[:128]) % 9) * 0.05  # 0.0..0.4
-		score = 3.0 + (tweak - 0.2)  # 2.8..3.2
-		return {
-			"score_1_to_5": float(f"{score:.2f}"),
-			"reason": "Deterministic stub based on prompt content.",
-		}
 
 

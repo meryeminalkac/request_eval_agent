@@ -48,7 +48,7 @@ class Evaluator:
 		- If keys come quoted (e.g., '"score_1_to_5"'), strip quotes/spaces.
 		- Default score to 3.0 and provide a fallback reason when missing/invalid.
 		"""
-		# If bytes → decode first
+
 		if isinstance(resp, (bytes, bytearray)):
 			try:
 				resp = resp.decode("utf-8", errors="ignore")
@@ -102,7 +102,7 @@ class Evaluator:
 		prf_by = self._index_by_project_name(prf_answers)
 		staff = staff_info if isinstance(staff_info, dict) else {"raw": staff_info}
 
-		# Use past project data as examples (not matching by project name)
+		# Use past project data as examples 
 		# Get the first available project as an example
 		if eva_by:
 			example_project = list(eva_by.keys())[0]
@@ -114,7 +114,7 @@ class Evaluator:
 		past_metric_evaluation = metric_entry.get("evaluation", "")
 		past_metric_score = metric_entry.get("score", "")
 
-		# Use past project data as examples (not matching by project name)
+		# Use past project data as examples 
 		if prf_by:
 			example_project = list(prf_by.keys())[0]
 			prf = prf_by[example_project]
@@ -170,7 +170,7 @@ class Evaluator:
 				staff_info or {},
 			)
 		rendered = prompt.render(project_text, **kwargs)
-		# Optional prompt logging
+	
 		if os.environ.get("LOG_PROMPTS", "").lower() in {"1", "true", "yes"}:
 			try:
 				logging.getLogger("uvicorn.access").info(
@@ -191,7 +191,7 @@ class Evaluator:
 		if not isinstance(reason, str) or not reason.strip():
 			reason = "No reason; defaulted."
 
-		# Optional debugging
+		
 		if os.environ.get("LOG_LLM", "").lower() in {"1", "true", "yes"}:
 			try:
 				print(f"[LLM DEBUG] metric={self.metric_id} sub={prompt.name} score={score} reason={reason[:120]}")
@@ -205,7 +205,7 @@ class Evaluator:
 		}
 
 	async def evaluate(self, project_text: str) -> dict:
-		# Back-compat: use only internal keys (may not match prompts with display labels)
+	
 		prompts: List[Tuple[str, SubmetricPrompt]] = []
 		for key in self.submetric_keys:
 			pmpt = SUBMETRIC_PROMPTS.get((self.metric_id, key))
@@ -241,7 +241,7 @@ class Evaluator:
 		prf_answers: Any,
 		staff_info: Any,
 	) -> dict:
-		# Use the prompts exactly as defined in prompts.py for this metric (by display label)
+	
 		prompts_for_metric: List[Tuple[str, SubmetricPrompt]] = [
 			(label, pmpt)
 			for (metric, label), pmpt in SUBMETRIC_PROMPTS.items()

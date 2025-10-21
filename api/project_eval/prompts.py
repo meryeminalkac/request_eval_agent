@@ -10,7 +10,7 @@ class SubmetricPrompt:
 	Submetric prompt definition.
 
 	template must include "{project_text}" placeholder.
-	You can also add any extra placeholders (e.g., {context}, {sources}, {language}).
+	You can also add any extra placeholders (e.g., {context}, {sources}, {current_stuff}).
 	LLM must return JSON only:
 	  {"score_1_to_5": float, "reason": str}
 	"""
@@ -40,7 +40,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Strategic Fit")] = SubmetricPrompt(
 	description="Alignment to strategy and core objectives.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Stratejik Uyumunu (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Stratejik Uyumunu (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Şirket stratejisi ve temel hedeflerle uyum\n"
 		"**Geçmiş Proje Örneği:**\n"
 		"Proje: {past_project_name}\n"
@@ -58,7 +58,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Business Value Contribution")] = Submetri
 	description="Expected measurable benefits and stakeholder impact.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin İş Değeri Katkısını (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin İş Değeri Katkısını (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Beklenen ölçülebilir faydalar\n"
 		"- Paydaş etkisi ve sonuçları\n"
 		"**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nİş Değeri Katkısı: {past_project_business_value_contribution}\n"
@@ -72,7 +72,7 @@ SUBMETRIC_PROMPTS[("business_impact", "Scalability & Replicability Potential")] 
 	description="Ease of replication and scale.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Ölçeklenebilirlik Potansiyelini (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Ölçeklenebilirlik Potansiyelini (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
         "**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nÖlçeklenebilirlik ve Tekrarlanabilirlik Potansiyeli: {past_project_scalability_data_scope}\n"
         "**Geçmiş Değerlendirme (Ölçeklenebilirlik ve Tekrarlanabilirlik Potansiyeli):** {past_metric_evaluation}\nPuan: {past_metric_score}\n"
 		"- Ölçek için operasyonel hazırlık\n"
@@ -87,7 +87,7 @@ SUBMETRIC_PROMPTS[("resource_investment", "Projected Timeline")] = SubmetricProm
 	description="Realism of the estimated duration and schedule.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Tahmini Zaman Çizelgesi gerçekçiliğini (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Tahmini Zaman Çizelgesi gerçekçiliğini (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Tahmini süre vs kapsam ve kısıtlar\n"
         "- Milestone'lar / kritik yol netliği\n"
 		"- Dış bağımlılıklar ve sıralama\n"
@@ -103,7 +103,7 @@ SUBMETRIC_PROMPTS[("resource_investment", "Estimated Person-Day Effort")] = Subm
 	description="Size/skills needed for delivery.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Ekip Ayak İzini (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Ekip Ayak İzini (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Gerekli roller ve kıdem seviyeleri\n"
 		"- Fonksiyonlar arası çaba yoğunluğu\n" 
 		"Mevcut durum: {current_stuff}\n"
@@ -118,7 +118,7 @@ SUBMETRIC_PROMPTS[("execution_risk", "External Resource Dependency")] = Submetri
 	description="Reliance on vendors/external inputs.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Dış Bağımlılığını (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Dış Bağımlılığını (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Tedarikçi bağımlılığı ve kısıtlar\n"
 		"- Dış engeller ve riskler\n"
         "**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nVeri Kapsamı: {past_project_data_scope}\nPaydaşlar: {past_project_stakeholders}\n"
@@ -134,7 +134,7 @@ SUBMETRIC_PROMPTS[("execution_risk", "Scope Definition Risk")] = SubmetricPrompt
 	description="Clarity of scope, goals, and acceptance.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Kapsam Tanımını (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Kapsam Tanımını (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Net kapsam ve başarı kriterleri\n"
 		"- Kesin problem tanımı\n"
         "**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nVeri Kapsamı: {past_project_data_scope}\nKapsam ve Hedefler: {past_project_scope_and_objectives}\n"
@@ -148,7 +148,7 @@ SUBMETRIC_PROMPTS[("execution_risk", "Critical Talent Dependency")] = SubmetricP
 	description="Availability of key skills/ownership.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Kritik Yetenek Bağımlılığını (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Kritik Yetenek Bağımlılığını (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Nadir yetenekler ve darboğazlar\n"
 		"- Sahiplik netliği\n"
         "Mevcut Durum: {current_stuff}\n"
@@ -163,7 +163,7 @@ SUBMETRIC_PROMPTS[("execution_risk", "Solution Complexity & Innovation Risk")] =
 	description="Novelty/uncertainty of approach.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin İnovasyon Karmaşıklığını (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin İnovasyon Karmaşıklığını (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Teknik bilinmeyenler/Ar-Ge ihtiyaçları\n"
 		"- Uygulanabilirlik belirsizliği\n"
         "**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nKapsam ve Hedefler: {past_project_scope_and_objectives}\n"
@@ -177,7 +177,7 @@ SUBMETRIC_PROMPTS[("execution_risk", "Implementation Failure Risk")] = Submetric
 	description="Likelihood of delivery/adoption failure.",
 	template=(
 		"Proje:\n{project_text}\n\n"
-		"Yukarıdaki projenin Uygulama Başarısızlığı riskini (1–5) değerlendirin. Dikkate alın:\n"
+		"Yukarıdaki projenin Uygulama Başarısızlığı riskini (1–5) değerlendirin. Aşağıdakileri göz önünde bulundurun:\n"
 		"- Uygulama boşlukları ve değişim riskleri\n"
 		"- Benimsenme ve yaygınlaştırma engelleri\n"
         "**Geçmiş Proje Örneği:**\nProje: {past_project_name}\nKapsam ve Hedefler: {past_project_scope_and_objectives}\n"
